@@ -55,20 +55,8 @@ void Drawer::CreateProgram() {
         if (glGetError() != GL_NO_ERROR) {
             return;
         }
-        GLuint vertexShader = LoadShader(GL_VERTEX_SHADER, "attribute vec4 aPosition;\n"
-                                                           "attribute vec2 aCoordinate;\n"
-                                                           "varying vec2 vCoordinate;\n"
-                                                           "void main() {\n"
-                                                           "  gl_Position = aPosition;\n"
-                                                           "  vCoordinate = aCoordinate;\n"
-                                                           "}");
-        GLuint fragmentShader = LoadShader(GL_FRAGMENT_SHADER, "precision mediump float;\n"
-                                                               "uniform sampler2D uTexture;\n"
-                                                               "varying vec2 vCoordinate;\n"
-                                                               "void main() {\n"
-                                                               "  vec4 color = texture2D(uTexture, vCoordinate);\n"
-                                                               "  gl_FragColor = color;\n"
-                                                               "}");
+        GLuint vertexShader = LoadShader(GL_VERTEX_SHADER, GetVertexShader());
+        GLuint fragmentShader = LoadShader(GL_FRAGMENT_SHADER, GetFragmentShader());
 //将顶点着色器加入到程序
         glAttachShader(m_program_id, vertexShader);
 //将片元着色器加入到程序中
@@ -95,7 +83,7 @@ GLuint Drawer::LoadShader(GLenum type, const GLchar *shader_code) {
 //根据type创建顶点着色器或者片元着色器
     GLuint shader = glCreateShader(type);
 //将资源加入到着色器中，并编译
-    glShaderSource(shader, 1, &shader_code, NULL);
+    glShaderSource(shader, 1, &shader_code, nullptr);
     glCompileShader(shader);
     GLint compiled;
 // 检查编译状态
