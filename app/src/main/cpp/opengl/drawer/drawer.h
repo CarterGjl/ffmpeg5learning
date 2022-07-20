@@ -54,7 +54,7 @@ public:
     int origin_height() {
         return m_origin_height;
     }
-    bool IsReadyToDraw();
+    bool IsReadyToDraw() const;
 /**
 * 释放OpenGL
 */
@@ -64,7 +64,7 @@ protected:
     void *cst_data = NULL;
     void SetSize(int width, int height);
     void ActivateTexture(GLenum type = GL_TEXTURE_2D, GLuint texture = -1,
-                         GLenum index = 0, int texture_handler = -1);
+                         GLint index = 0, int texture_handler = -1) const;
     virtual const char* GetVertexShader() = 0;
     virtual const char* GetFragmentShader() = 0;
     virtual void InitCstShaderHandler() = 0;

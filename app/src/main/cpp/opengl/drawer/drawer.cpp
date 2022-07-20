@@ -11,8 +11,8 @@ Drawer::Drawer(int origin_width, int origin_height):
         m_origin_width(origin_width),
         m_origin_height(origin_height) {
 }
-Drawer::~Drawer() {
-}
+Drawer::~Drawer() = default;
+
 void Drawer::SetSize(int width, int height) {
     this->m_origin_width = width;
     this->m_origin_height = height;
@@ -27,7 +27,7 @@ void Drawer::Draw() {
         DoneDraw();
     }
 }
-bool Drawer::IsReadyToDraw() {
+bool Drawer::IsReadyToDraw() const {
     return m_origin_width > 0 && m_origin_height > 0;
 }
 void Drawer::DoDraw() {
@@ -57,11 +57,11 @@ void Drawer::CreateProgram() {
         }
         GLuint vertexShader = LoadShader(GL_VERTEX_SHADER, GetVertexShader());
         GLuint fragmentShader = LoadShader(GL_FRAGMENT_SHADER, GetFragmentShader());
-//将顶点着色器加入到程序
+        // 将顶点着色器加入到程序
         glAttachShader(m_program_id, vertexShader);
-//将片元着色器加入到程序中
+        // 将片元着色器加入到程序中
         glAttachShader(m_program_id, fragmentShader);
-//连接到着色器程序
+        // 连接到着色器程序
         glLinkProgram(m_program_id);
         m_vertex_matrix_handler = glGetUniformLocation(m_program_id, "uMatrix");
         m_vertex_pos_handler = glGetAttribLocation(m_program_id, "aPosition");
@@ -80,21 +80,21 @@ GLuint Drawer::LoadShader(GLenum type, const GLchar *shader_code) {
     LOGI(TAG, "Load shader:\n %s", shader_code)
     auto *n = new std::string(shader_code);
     LOGI(TAG, "Load shader:\n %s", n->c_str())
-//根据type创建顶点着色器或者片元着色器
+    // 根据type创建顶点着色器或者片元着色器
     GLuint shader = glCreateShader(type);
-//将资源加入到着色器中，并编译
+    // 将资源加入到着色器中，并编译
     glShaderSource(shader, 1, &shader_code, nullptr);
     glCompileShader(shader);
     GLint compiled;
-// 检查编译状态
+    // 检查编译状态
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
     if (!compiled) {
         GLint infoLen = 0;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
         if (infoLen > 1) {
-            GLchar* infoLog = (GLchar*) malloc(sizeof(GLchar) * infoLen);
-            glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
-            LOGI(TAG, "Error compiling shader:\n%s\n", infoLog);
+            auto* infoLog = (GLchar*) malloc(sizeof(GLchar) * infoLen);
+            glGetShaderInfoLog(shader, infoLen, nullptr, infoLog);
+            LOGE(TAG, "Error compiling shader:\n%s\n", infoLog)
             free(infoLog);
         }
         glDeleteShader(shader);
@@ -102,16 +102,16 @@ GLuint Drawer::LoadShader(GLenum type, const GLchar *shader_code) {
     }
     return shader;
 }
-void Drawer::ActivateTexture(GLenum type, GLuint texture, GLenum index, int texture_handler) {
+void Drawer::ActivateTexture(GLenum type, GLuint texture, GLint index, int texture_handler) const {
     if (texture == -1) texture = m_texture_id;
     if (texture_handler == -1) texture_handler = m_texture_handler;
-//激活指定纹理单元
+    // 激活指定纹理单元
     glActiveTexture(GL_TEXTURE0 + index);
-//绑定纹理ID到纹理单元
+    // 绑定纹理ID到纹理单元
     glBindTexture(type, texture);
-//将活动的纹理单元传递到着色器里面
+    // 将活动的纹理单元传递到着色器里面
     glUniform1i(texture_handler, index);
-//配置边缘过渡参数
+    // 配置边缘过渡参数
     glTexParameterf(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

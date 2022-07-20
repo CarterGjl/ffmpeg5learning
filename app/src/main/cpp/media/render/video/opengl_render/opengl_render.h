@@ -54,7 +54,7 @@ private:
     void ReleaseSurface();
     void ReleaseWindow();
 // 渲染线程回调方法
-    static void sRenderThread(std::shared_ptr<OpenGLRender> that);
+    static void sRenderThread(const std::shared_ptr<OpenGLRender>& that);
 public:
     OpenGLRender(JNIEnv *env, DrawerProxy *drawer_proxy);
     ~OpenGLRender();

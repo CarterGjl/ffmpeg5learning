@@ -7,8 +7,7 @@
 VideoDrawer::VideoDrawer() : Drawer(0, 0) {
 }
 
-VideoDrawer::~VideoDrawer() {
-}
+VideoDrawer::~VideoDrawer() = default;
 
 void VideoDrawer::InitRender(JNIEnv *env, int video_width, int video_height, int *dst_size) {
     SetSize(video_width, video_height);
@@ -54,7 +53,7 @@ void VideoDrawer::BindTexture() {
 }
 
 void VideoDrawer::PrepareDraw() {
-    if (cst_data != NULL) {
+    if (cst_data != nullptr) {
         glTexImage2D(GL_TEXTURE_2D, 0, // level一般为0
                      GL_RGBA, //纹理内部格式
                      origin_width(), origin_height(), // 画面宽高
