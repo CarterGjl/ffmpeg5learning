@@ -3,7 +3,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         package="com.example.ffmpeg5learning">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
@@ -15,7 +16,10 @@
             android:theme="@style/Theme.Ffmpeg5learning"
             tools:targetApi="31">
         <activity
-                android:name=".MainActivity"
+                android:name=".SampleRenderActivity"
+                android:exported="false" />
+        <activity
+                android:name=".HomeActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +27,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+                android:name=".MainActivity"
+                android:exported="true">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity android:name=".sample.ui.SampleRenderActivity"
+                android:screenOrientation="sensor"
+                android:configChanges="orientation"/>
     </application>
 
 </manifest>

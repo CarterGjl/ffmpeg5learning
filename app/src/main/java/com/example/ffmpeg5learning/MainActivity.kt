@@ -1,15 +1,20 @@
 package com.example.ffmpeg5learning
 
 import android.annotation.SuppressLint
+import android.media.MediaCodec
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.view.Surface
 import android.view.SurfaceHolder
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.ffmpeg5learning.base.BaseActivity
 import com.example.ffmpeg5learning.databinding.ActivityMainBinding
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
+private const val TAG = "MainActivity"
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     val path = Environment.getExternalStorageDirectory().absolutePath + "/mvtest.mp4"
@@ -81,5 +86,14 @@ class MainActivity : AppCompatActivity() {
         init {
             System.loadLibrary("ffmpeg5learning")
         }
+
+        fun callback(string: String){
+            Log.d(TAG, "callback: $string")
+        }
+    }
+
+    fun callback(string: String){
+        Log.d(TAG, "callback: $string")
+        Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
     }
 }

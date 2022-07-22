@@ -24,6 +24,9 @@ Java_com_example_ffmpeg5learning_MainActivity_ffmpegVersion(JNIEnv *env, jobject
     char *charArray = new char[1024];
 //    std::stringstream() << a << "." << b << "." << c << '\0' >> charArray;
     char str[25];
+    jclass mclass = env->FindClass("com/example/ffmpeg5learning/MainActivity");
+    jmethodID  mid = env->GetMethodID(mclass,"callback", "(Ljava/lang/String;)V");
+    env->CallVoidMethod(thiz, mid, env->NewStringUTF("fdas"));
     auto *n = new std::string("dsfa edafsa");
     sprintf(charArray, "%d%s%d%s%d", a, ".", b, ".", c);
     return env->NewStringUTF(n->c_str());
