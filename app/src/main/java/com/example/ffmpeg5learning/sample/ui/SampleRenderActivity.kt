@@ -3,7 +3,6 @@ package com.example.ffmpeg5learning.sample.ui
 import android.graphics.BitmapFactory
 import android.opengl.GLSurfaceView.RENDERMODE_WHEN_DIRTY
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.ffmpeg5learning.R
 import com.example.ffmpeg5learning.base.BaseActivity
 import com.example.ffmpeg5learning.databinding.ActivitySampleRenderBinding
@@ -16,7 +15,8 @@ class SampleRenderActivity : BaseActivity() {
 
     private lateinit var drawer1: TriangleDrawer
     private lateinit var binding: ActivitySampleRenderBinding
-    //自定义的OpenGL渲染器，详情请继续往下看
+
+    // 自定义的OpenGL渲染器，详情请继续往下看
     lateinit var drawer: IDrawer
 
     override fun onCreate(savedInstanceState: Bundle?) {

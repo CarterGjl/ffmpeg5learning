@@ -11,11 +11,14 @@ import java.nio.FloatBuffer
 
 class VideoDrawer(private var mTextureId: Int) : IDrawer {
 
+    // 纹理坐标接收者
     private var mTexturePosHandler: Int = -1
     private var mTextureHandler: Int = -1
+    // 顶点坐标接收者
     private var mVertexPosHandler: Int = -1
     private var mVertexMatrixHandler: Int = -1
     private var mMatrix: FloatArray? = null
+    // OpenGL程序ID
     private var mProgram: Int = -1
     private lateinit var mTextureBuffer: FloatBuffer
     private lateinit var mVertexBuffer: FloatBuffer

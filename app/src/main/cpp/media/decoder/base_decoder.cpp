@@ -36,7 +36,7 @@ void BaseDecoder::Decode(const std::shared_ptr<BaseDecoder>& that) {
 
     //将线程附加到虚拟机，并获取env
     if (that->m_jvm_for_thread->AttachCurrentThread(&env, nullptr) != JNI_OK) {
-        LOG_ERROR(that->TAG, that->LogSpec(), "Fail to Init decode thread");
+        LOG_ERROR(that->TAG, that->LogSpec(), "Fail to Init decode thread")
         return;
     }
 
@@ -63,7 +63,6 @@ void BaseDecoder::InitFFMpegDecoder(JNIEnv * env) {
     int ret = avformat_open_input(&m_format_ctx, m_path, nullptr, nullptr);
     if (ret != 0) {
         LOG_ERROR(TAG, LogSpec(), "Fail to open file [%d] [%s]",ret, m_path)
-        DoneDecode(env);
         return;
     }
 
@@ -96,18 +95,18 @@ void BaseDecoder::InitFFMpegDecoder(JNIEnv * env) {
     //4.3 获取解码器
 //    m_codec = avcodec_find_decoder_by_name("h264_mediacodec");//硬解码
     m_codec = avcodec_find_decoder(codecPar->codec_id);
-    LOG_INFO(TAG, LogSpec(), "m_codec name %s",m_codec->name);
+    LOG_INFO(TAG, LogSpec(), "m_codec name %s",m_codec->name)
     //4.4 获取解码器上下文
     m_codec_ctx = avcodec_alloc_context3(m_codec);
     if (avcodec_parameters_to_context(m_codec_ctx, codecPar) != 0) {
-        LOG_ERROR(TAG, LogSpec(), "Fail to obtain av codec context");
+        LOG_ERROR(TAG, LogSpec(), "Fail to obtain av codec context")
         DoneDecode(env);
         return;
     }
 
     //5，打开解码器
     if (avcodec_open2(m_codec_ctx, m_codec, nullptr) < 0) {
-        LOG_ERROR(TAG, LogSpec(), "Fail to open av codec");
+        LOG_ERROR(TAG, LogSpec(), "Fail to open av codec")
         DoneDecode(env);
         return;
     }
@@ -133,7 +132,7 @@ void BaseDecoder::LoopDecode() {
     CallbackState(START);
 
     LOG_INFO(TAG, LogSpec(), "Start loop decode")
-    while(1) {
+    while(true) {
         if (m_state != DECODING &&
             m_state != START &&
             m_state != STOP) {
@@ -178,17 +177,17 @@ AVFrame* BaseDecoder::DecodeOneFrame() {
             switch (avcodec_send_packet(m_codec_ctx, m_packet)) {
                 case AVERROR_EOF: {
                     av_packet_unref(m_packet);
-                    LOG_ERROR(TAG, LogSpec(), "Decode error: %s", av_err2str(AVERROR_EOF));
+                    LOG_ERROR(TAG, LogSpec(), "Decode error: %s", av_err2str(AVERROR_EOF))
                     return nullptr; //解码结束
                 }
                 case AVERROR(EAGAIN):
-                    LOG_ERROR(TAG, LogSpec(), "Decode error: %s", av_err2str(AVERROR(EAGAIN)));
+                    LOG_ERROR(TAG, LogSpec(), "Decode error: %s", av_err2str(AVERROR(EAGAIN)))
                     break;
                 case AVERROR(EINVAL):
-                    LOG_ERROR(TAG, LogSpec(), "Decode error: %s", av_err2str(AVERROR(EINVAL)));
+                    LOG_ERROR(TAG, LogSpec(), "Decode error: %s", av_err2str(AVERROR(EINVAL)))
                     break;
                 case AVERROR(ENOMEM):
-                    LOG_ERROR(TAG, LogSpec(), "Decode error: %s", av_err2str(AVERROR(ENOMEM)));
+                    LOG_ERROR(TAG, LogSpec(), "Decode error: %s", av_err2str(AVERROR(ENOMEM)))
                     break;
                 default:
                     break;
