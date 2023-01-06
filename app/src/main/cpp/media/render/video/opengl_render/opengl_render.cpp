@@ -91,31 +91,36 @@ void OpenGLRender::InitDspWindow(JNIEnv *env) {
 }
 
 void OpenGLRender::CreateSurface() {
+    if (m_egl_surface == nullptr) {
+        return;
+    }
     m_egl_surface->CreateEglSurface(m_native_window, m_window_width, m_window_height);
     glViewport(0, 0, m_window_width, m_window_height);
 }
 
 void OpenGLRender::DestroySurface() {
-    m_egl_surface->DestroyEglSurface();
+    if (m_egl_surface != nullptr) {
+        m_egl_surface->DestroyEglSurface();
+    }
     ReleaseWindow();
 }
 
 void OpenGLRender::Render() {
-    if (RENDERING == m_state) {
-        m_drawer_proxy->Draw();
+    m_drawer_proxy->Draw();
+    if (m_egl_surface != nullptr) {
         m_egl_surface->SwapBuffers();
-        if (m_need_output_pixels && m_pixel_receiver != nullptr) {//输出画面rgba
-            m_need_output_pixels = false;
-            Render(); //再次渲染最新的画面
-            size_t size = m_window_width * m_window_height * 4 * sizeof(uint8_t);
-            auto *rgb = (uint8_t *) malloc(size);
-            if (rgb == nullptr) {
-                realloc(rgb, size);
-                LOGE(TAG, "内存分配失败： %s", rgb)
-            }
-            glReadPixels(0, 0, m_window_width, m_window_height, GL_RGBA, GL_UNSIGNED_BYTE, rgb);
-            m_pixel_receiver->ReceivePixel(rgb);
+    }
+    if (m_need_output_pixels && m_pixel_receiver != nullptr) {//输出画面rgba
+        m_need_output_pixels = false;
+        Render(); //再次渲染最新的画面
+        size_t size = m_window_width * m_window_height * 4 * sizeof(uint8_t);
+        auto *rgb = (uint8_t *) malloc(size);
+        if (rgb == nullptr) {
+            realloc(rgb, size);
+            LOGE(TAG, "内存分配失败： %s", rgb)
         }
+        glReadPixels(0, 0, m_window_width, m_window_height, GL_RGBA, GL_UNSIGNED_BYTE, rgb);
+        m_pixel_receiver->ReceivePixel(rgb);
     }
 }
 
@@ -158,13 +163,13 @@ void OpenGLRender::SetSurface(jobject surface) {
     }
 }
 
-void OpenGLRender::SetOffScreenSize(int width, int height) {
+__attribute__((unused)) void OpenGLRender::SetOffScreenSize(int width, int height) {
     m_window_width = width;
     m_window_height = height;
     m_state = FRESH_SURFACE;
 }
 
-void OpenGLRender::RequestRgbaData() {
+__attribute__((unused)) __attribute__((unused)) void OpenGLRender::RequestRgbaData() {
     m_need_output_pixels = true;
 }
 

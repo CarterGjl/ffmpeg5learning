@@ -11,7 +11,7 @@
 
 extern "C" {
 #include "../ffmpeg/include/libavutil/rational.h"
-};
+}
 
 class OneFrame {
 public:

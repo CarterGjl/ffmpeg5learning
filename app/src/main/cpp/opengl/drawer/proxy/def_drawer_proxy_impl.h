@@ -13,8 +13,10 @@ private:
     std::vector<Drawer *> m_drawers;
 
 public:
-    void AddDrawer(Drawer *drawer);
+    void AddDrawer(Drawer *drawer) override;
+
     void Draw() override;
+
     void Release() override;
 };
 

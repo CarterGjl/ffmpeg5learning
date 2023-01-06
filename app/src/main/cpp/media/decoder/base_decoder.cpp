@@ -246,7 +246,9 @@ void BaseDecoder::ObtainTimeStamp() {
     } else {
         m_cur_t_s = 0;
     }
-    m_cur_t_s = (int64_t)((m_cur_t_s * av_q2d(m_format_ctx->streams[m_stream_index]->time_base)) * 1000);
+    m_cur_t_s = (int64_t) (((double) m_cur_t_s * av_q2d
+            (m_format_ctx->streams[m_stream_index]->time_base))
+                           * 1000);
 }
 
 void BaseDecoder::SyncRender() {
@@ -294,8 +296,8 @@ void BaseDecoder::Wait(long second, long ms) {
 //    LOG_INFO(TAG, LogSpec(), "Decoder run into wait, state：%s", GetStateStr())
     pthread_mutex_lock(&m_mutex);
     if (second > 0 || ms > 0) {
-        timeval now;
-        timespec outtime;
+        timeval now{};
+        timespec outtime{};
         gettimeofday(&now, nullptr);
         int64_t destNSec = now.tv_usec * 1000 + ms * 1000000;
         outtime.tv_sec = static_cast<__kernel_time_t>(now.tv_sec + second + destNSec / 1000000000);

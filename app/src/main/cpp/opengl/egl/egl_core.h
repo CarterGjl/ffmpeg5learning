@@ -21,7 +21,7 @@ private:
     EGLContext m_egl_cxt = EGL_NO_CONTEXT;
 
     // EGL配置
-    EGLConfig m_egl_cfg;
+    EGLConfig m_egl_cfg{};
 
     EGLConfig GetEGLConfig();
 

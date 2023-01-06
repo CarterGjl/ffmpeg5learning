@@ -6,13 +6,9 @@
 #include "../../utils/logger.h"
 
 
-EglCore::EglCore() {
+EglCore::EglCore() = default;
 
-}
-
-EglCore::~EglCore() {
-
-}
+EglCore::~EglCore() = default;
 
 bool EglCore::Init(EGLContext share_ctx) {
     if (m_egl_dsp != EGL_NO_DISPLAY) {
@@ -84,7 +80,7 @@ EGLConfig EglCore::GetEGLConfig() {
 }
 
 EGLSurface EglCore::CreateWindSurface(ANativeWindow *window) {
-    EGLSurface surface = eglCreateWindowSurface(m_egl_dsp, m_egl_cfg, window, 0);
+    EGLSurface surface = eglCreateWindowSurface(m_egl_dsp, m_egl_cfg, window, nullptr);
     if (eglGetError() != EGL_SUCCESS) {
         LOGI(TAG, "EGL create window surface fail")
         return nullptr;

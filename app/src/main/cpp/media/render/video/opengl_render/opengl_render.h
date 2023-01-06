@@ -37,33 +37,51 @@ private:
     int m_window_width = 0;
     int m_window_height = 0;
     bool m_need_output_pixels = false;
-    OpenGLPixelReceiver * m_pixel_receiver = NULL;
+    OpenGLPixelReceiver *m_pixel_receiver = NULL;
     STATE m_state = NO_SURFACE;
+
 // 初始化相关的方法
     void InitRenderThread();
+
     bool InitEGL();
+
     void InitDspWindow(JNIEnv *env);
+
 // 创建Surface
     void CreateSurface();
+
     void DestroySurface();
+
 // 渲染方法
     void Render();
+
 // 释放资源相关方法
     void ReleaseRender();
+
     void ReleaseDrawers();
+
     void ReleaseSurface();
+
     void ReleaseWindow();
+
 // 渲染线程回调方法
-    static void sRenderThread(const std::shared_ptr<OpenGLRender>& that);
+    static void sRenderThread(const std::shared_ptr<OpenGLRender> &that);
+
 public:
     OpenGLRender(JNIEnv *env, DrawerProxy *drawer_proxy);
+
     ~OpenGLRender();
-    void SetPixelReceiver(OpenGLPixelReceiver *receiver) {
+
+    __attribute__((unused)) void SetPixelReceiver(OpenGLPixelReceiver *receiver) {
         m_pixel_receiver = receiver;
     }
+
     void SetSurface(jobject surface);
-    void SetOffScreenSize(int width, int height);
-    void RequestRgbaData();
+
+    __attribute__((unused)) void SetOffScreenSize(int width, int height);
+
+    __attribute__((unused)) void RequestRgbaData();
+
     void Stop();
 };
 

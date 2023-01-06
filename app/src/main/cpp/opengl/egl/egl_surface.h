@@ -18,7 +18,7 @@ private:
 
     EglCore *m_core;
 
-    EGLSurface m_surface;
+    EGLSurface m_surface{};
 public:
     EglSurface();
     ~EglSurface();

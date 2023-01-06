@@ -14,7 +14,7 @@ class Drawer {
 private:
     const char *TAG = "Drawer";
 /**上下颠倒的顶点矩阵*/
-    const GLfloat m_reserve_vertex_coors[8] = {
+    __attribute__((unused)) const GLfloat m_reserve_vertex_coors[8] = {
             -1.0f, 1.0f,
             1.0f, 1.0f,
             -1.0f, -1.0f,
@@ -34,7 +34,7 @@ private:
     };
     GLuint m_program_id = 0;
     GLuint m_texture_id = 0;
-    GLint m_vertex_matrix_handler = -1;
+    __attribute__((unused)) GLint m_vertex_matrix_handler = -1;
     GLint m_vertex_pos_handler = -1;
     GLint m_texture_pos_handler = -1;
     GLint m_texture_handler = -1;

@@ -20,7 +20,7 @@ extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/frame.h>
 #include <libavutil/time.h>
-};
+}
 
 class BaseDecoder : public IDecoder {
 

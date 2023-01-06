@@ -1,14 +1,12 @@
 package com.example.ffmpeg5learning
 
 import android.annotation.SuppressLint
-import android.media.MediaCodec
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.Surface
 import android.view.SurfaceHolder
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.example.ffmpeg5learning.base.BaseActivity
 import com.example.ffmpeg5learning.databinding.ActivityMainBinding
 import java.io.File
@@ -67,7 +65,7 @@ class MainActivity : BaseActivity() {
      */
     private external fun stringFromJNI(): String
 
-    external fun ffmpegVersion(): String
+    private external fun ffmpegVersion(): String
 
 //    external fun ffmpegInfo(): String
 

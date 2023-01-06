@@ -3,16 +3,23 @@
 //
 
 #include <jni.h>
+#include <cstdint>
 #include <cstring>
 #include "utils/logger.h"
+#include "utils/stdefine.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
+int av_jni_set_java_vm(void *vm, void *log_ctx);
 }
 
 
 jlong nativeOpen(JNIEnv *env, jobject obj, jstring url, jobject jsurface, jint w, jint h,
                  jstring params) {
+    DO_USE_VAR(obj);
+    DO_USE_VAR(jsurface);
+    DO_USE_VAR(w);
+    DO_USE_VAR(h);
     return 1;
 }
 
@@ -70,6 +77,9 @@ jstring getFFmpegVersion(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(strBuffer);
 }
 
+//++ jni register ++//
+static JavaVM* g_jvm = nullptr;
+
 JNINativeMethod g_methods[] = {
         {"nativeOpen",              "(Ljava/lang/String;Ljava/lang/Object;IILjava/lang/String;)J", (void *) nativeOpen},
         {"nativeClose",             "(J)V",                                                        (void *) nativeClose},
@@ -97,6 +107,10 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
                             "ERROR: failed to register native methods !\n");
         return -1;
     }
+
+    // for g_jvm
+    g_jvm = vm;
+    av_jni_set_java_vm(vm, nullptr);
 
     return JNI_VERSION_1_6;
 }

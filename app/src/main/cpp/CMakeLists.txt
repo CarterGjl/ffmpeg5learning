@@ -86,6 +86,9 @@ add_library( # Sets the name of the library.
         # 工具
         ${CMAKE_SOURCE_DIR}/utils/logger.h
         ${CMAKE_SOURCE_DIR}/utils/timer.c
+        ${CMAKE_SOURCE_DIR}/utils/stdefine.h
+        ${CMAKE_SOURCE_DIR}/player/ffplayer.h
+        ${CMAKE_SOURCE_DIR}/player/ffplayer.cpp
         # 播放器
         ${CMAKE_SOURCE_DIR}/media/player/def_player/player.cpp
         ${CMAKE_SOURCE_DIR}/media/player/gl_player/gl_player.cpp

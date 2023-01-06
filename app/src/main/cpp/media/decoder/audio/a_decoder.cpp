@@ -27,23 +27,37 @@ void AudioDecoder::Prepare(JNIEnv *env) {
 void AudioDecoder::InitSwr() {
     AVCodecContext *codeCtx = codec_cxt();
 
+    AVChannelLayout outChannelLayout;
+    outChannelLayout.nb_channels = 2;
     //初始化格式转换工具
-    m_swr = swr_alloc();
+    int ret = swr_alloc_set_opts2(&m_swr,         // we're allocating a new context
+                                  &outChannelLayout, // out_ch_layout
+                                  GetSampleFmt(),    // out_sample_fmt
+                                  GetSampleRate(
+                                          codeCtx->sample_rate),                // out_sample_rate
+                                  &codeCtx->ch_layout, // in_ch_layout
+                                  AV_SAMPLE_FMT_FLTP,   // in_sample_fmt
+                                  codeCtx->sample_rate,                // in_sample_rate
+                                  0,                    // log_offset
+                                  nullptr);                // log_ctx
+    LOGI(TAG, "swr_alloc_set_opts2 result %d,", ret)
+//    m_swr = swr_alloc();
 
-    av_opt_set_int(m_swr, "in_channel_layout", codeCtx->channel_layout, 0);
-    av_opt_set_int(m_swr, "out_channel_layout", ENCODE_AUDIO_DEST_CHANNEL_LAYOUT, 0);
-
-    av_opt_set_int(m_swr, "in_sample_rate", codeCtx->sample_rate, 0);
-    av_opt_set_int(m_swr, "out_sample_rate", GetSampleRate(codeCtx->sample_rate), 0);
-
-    av_opt_set_sample_fmt(m_swr, "in_sample_fmt", codeCtx->sample_fmt, 0);
-    av_opt_set_sample_fmt(m_swr, "out_sample_fmt", GetSampleFmt(), 0);
+//    av_opt_set_int(m_swr, "in_channel_layout", codeCtx->channel_layout, 0);
+//    av_opt_set_int(m_swr, "out_channel_layout", ENCODE_AUDIO_DEST_CHANNEL_LAYOUT, 0);
+//
+//    av_opt_set_int(m_swr, "in_sample_rate", codeCtx->sample_rate, 0);
+//    av_opt_set_int(m_swr, "out_sample_rate", GetSampleRate(codeCtx->sample_rate), 0);
+//
+//    av_opt_set_sample_fmt(m_swr, "in_sample_fmt", codeCtx->sample_fmt, 0);
+//    av_opt_set_sample_fmt(m_swr, "out_sample_fmt", GetSampleFmt(), 0);
 
     swr_init(m_swr);
 
-    LOGI(TAG, "sample rate: %d, channel: %d, format: %d, frame_size: %d, layout: %lld",
-         codeCtx->sample_rate, codeCtx->channels, codeCtx->sample_fmt, codeCtx->frame_size,
-         codeCtx->channel_layout)
+    LOGI(TAG, "sample rate: %d, channel: %d, format: %d, frame_size: %d, layout: %llu",
+         codeCtx->sample_rate, codeCtx->ch_layout.nb_channels, codeCtx->sample_fmt,
+         codeCtx->frame_size,
+         AV_CH_LAYOUT_5POINT1)
 }
 
 void AudioDecoder::CalculateSampleArgs() {
