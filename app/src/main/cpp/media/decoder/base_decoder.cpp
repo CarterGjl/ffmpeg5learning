@@ -57,9 +57,10 @@ void BaseDecoder::Decode(const std::shared_ptr<BaseDecoder>& that) {
 }
 
 void BaseDecoder::InitFFMpegDecoder(JNIEnv * env) {
-    //1，初始化上下文
+    /// ======== 解封装 start
+    // 1，初始化上下文
     m_format_ctx = avformat_alloc_context();
-    //2，打开文件
+    // 2，打开文件
     int ret = avformat_open_input(&m_format_ctx, m_path, nullptr, nullptr);
     if (ret != 0) {
         LOG_ERROR(TAG, LogSpec(), "Fail to open file [%d] [%s]",ret, m_path)
@@ -72,9 +73,10 @@ void BaseDecoder::InitFFMpegDecoder(JNIEnv * env) {
         DoneDecode(env);
         return;
     }
+    /// ========= 解封装 end
 
-    //4，查找编解码器
-    //4.1 获取视频流的索引
+    // 4，查找编解码器
+    /// =========  4.1 获取视频流的索引
     int vIdx = -1;//存放视频流的索引
     for (int i = 0; i < m_format_ctx->nb_streams; ++i) {
         if (m_format_ctx->streams[i]->codecpar->codec_type == GetMediaType()) {
@@ -89,14 +91,14 @@ void BaseDecoder::InitFFMpegDecoder(JNIEnv * env) {
     }
     m_stream_index = vIdx;
 
-    //4.2 获取解码器参数
+    // 4.2 获取解码器参数
     const AVCodecParameters *codecPar = m_format_ctx->streams[vIdx]->codecpar;
-
-    //4.3 获取解码器
-//    m_codec = avcodec_find_decoder_by_name("h264_mediacodec");//硬解码
+    /// 初始化解码器 start
+    // 4.3 获取解码器
+    // m_codec = avcodec_find_decoder_by_name("h264_mediacodec");//硬解码
     m_codec = avcodec_find_decoder(codecPar->codec_id);
     LOG_INFO(TAG, LogSpec(), "m_codec name %s",m_codec->name)
-    //4.4 获取解码器上下文
+    // 4.4 获取解码器上下文
     m_codec_ctx = avcodec_alloc_context3(m_codec);
     if (avcodec_parameters_to_context(m_codec_ctx, codecPar) != 0) {
         LOG_ERROR(TAG, LogSpec(), "Fail to obtain av codec context")
@@ -104,12 +106,13 @@ void BaseDecoder::InitFFMpegDecoder(JNIEnv * env) {
         return;
     }
 
-    //5，打开解码器
+    // 5，打开解码器
     if (avcodec_open2(m_codec_ctx, m_codec, nullptr) < 0) {
         LOG_ERROR(TAG, LogSpec(), "Fail to open av codec")
         DoneDecode(env);
         return;
     }
+    /// 初始化解码器 end
 
     m_duration = (long)((float)m_format_ctx->duration/AV_TIME_BASE * 1000);
 
@@ -171,9 +174,11 @@ void BaseDecoder::LoopDecode() {
 }
 
 AVFrame* BaseDecoder::DecodeOneFrame() {
+    // 读取编码数据包
     int ret = av_read_frame(m_format_ctx, m_packet);
     while (ret == 0) {
         if (m_packet->stream_index == m_stream_index) {
+            // 发送数据包到解码队列
             switch (avcodec_send_packet(m_codec_ctx, m_packet)) {
                 case AVERROR_EOF: {
                     av_packet_unref(m_packet);
@@ -192,7 +197,8 @@ AVFrame* BaseDecoder::DecodeOneFrame() {
                 default:
                     break;
             }
-            //TODO 这里需要考虑一个packet有可能包含多个frame的情况
+            // TODO 这里需要考虑一个packet有可能包含多个frame的情况
+            // 接收一帧解码数据
             int result = avcodec_receive_frame(m_codec_ctx, m_frame);
             if (result == 0) {
                 ObtainTimeStamp();

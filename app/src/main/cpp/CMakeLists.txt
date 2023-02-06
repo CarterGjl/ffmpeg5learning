@@ -83,6 +83,7 @@ add_library( # Sets the name of the library.
         # Provides a relative path to your source file(s).
         native-lib.cpp
         fanplayer_jni.cpp
+        test.cpp
         # 工具
         ${CMAKE_SOURCE_DIR}/utils/logger.h
         ${CMAKE_SOURCE_DIR}/utils/timer.c

@@ -42,6 +42,7 @@ void VideoDecoder::InitSws() {
 }
 
 void VideoDecoder::Render(AVFrame *frame) {
+    // 对图像进行格式转换
     sws_scale(m_sws_ctx, frame->data, frame->linesize, 0,
               height(), m_rgb_frame->data, m_rgb_frame->linesize);
     auto *one_frame = new OneFrame(m_rgb_frame->data[0], m_rgb_frame->linesize[0], frame->pts,
